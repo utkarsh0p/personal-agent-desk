@@ -1,7 +1,7 @@
 "use client"
 
 import { UserButton } from "@clerk/nextjs"
-import { CreditCardIcon } from "lucide-react"
+import { CreditCardIcon, FileTextIcon, ShieldIcon } from "lucide-react"
 
 // The account button in the sidebar footer, with the pricing page in its menu.
 // A client component, as the menu's parts only exist on the client.
@@ -28,6 +28,16 @@ function UserMenu() {
           label="Pricing"
           labelIcon={<CreditCardIcon className="size-4" />}
           href="/pricing"
+        />
+        <UserButton.Link
+          label="Privacy"
+          labelIcon={<ShieldIcon className="size-4" />}
+          href="/privacy"
+        />
+        <UserButton.Link
+          label="Terms"
+          labelIcon={<FileTextIcon className="size-4" />}
+          href="/terms"
         />
         <UserButton.Action label="signOut" />
       </UserButton.MenuItems>
