@@ -105,7 +105,10 @@ export const chatAgent = chat
 
       // The turn number names the turn within its chat, and keeps naming it
       // the same if a continuation run replays it
-      const decision = await consumeRequest(row.userId, `chat:${chatId}:${turn}`)
+      const decision = await consumeRequest(
+        row.userId,
+        `chat:${chatId}:${turn}`
+      )
 
       if (!decision.allowed) {
         console.info("Chat turn refused", {

@@ -45,9 +45,7 @@ export default function RootLayout({
             resolved theme and hand Clerk a logo with matching ink. */}
         <ThemeProvider>
           <ClerkAppearanceProvider>
-            <TooltipProvider>
-              {children}
-            </TooltipProvider>
+            <TooltipProvider>{children}</TooltipProvider>
             <Toaster />
           </ClerkAppearanceProvider>
         </ThemeProvider>

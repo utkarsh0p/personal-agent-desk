@@ -1,8 +1,8 @@
-import { cn } from "@/lib/utils";
-import { NodeToolbar, Position } from "@xyflow/react";
-import type { ComponentProps } from "react";
+import { cn } from "@/lib/utils"
+import { NodeToolbar, Position } from "@xyflow/react"
+import type { ComponentProps } from "react"
 
-type ToolbarProps = ComponentProps<typeof NodeToolbar>;
+type ToolbarProps = ComponentProps<typeof NodeToolbar>
 
 export const Toolbar = ({ className, ...props }: ToolbarProps) => (
   <NodeToolbar
@@ -13,4 +13,4 @@ export const Toolbar = ({ className, ...props }: ToolbarProps) => (
     position={Position.Bottom}
     {...props}
   />
-);
+)

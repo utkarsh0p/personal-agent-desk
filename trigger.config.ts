@@ -1,4 +1,4 @@
-import { defineConfig } from "@trigger.dev/sdk";
+import { defineConfig } from "@trigger.dev/sdk"
 
 export default defineConfig({
   project: process.env.TRIGGER_PROJECT_REF ?? "proj_jhiuddpuhbmbhpuzeyzc",
@@ -19,4 +19,4 @@ export default defineConfig({
     },
   },
   dirs: ["trigger"],
-});
+})

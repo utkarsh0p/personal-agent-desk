@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import type { Experimental_GeneratedImage } from "ai";
+import { cn } from "@/lib/utils"
+import type { Experimental_GeneratedImage } from "ai"
 
 // uint8Array is optional so images that only exist as base64 can be shown
 export type ImageProps = Pick<
@@ -7,9 +7,9 @@ export type ImageProps = Pick<
   "base64" | "mediaType"
 > &
   Partial<Pick<Experimental_GeneratedImage, "uint8Array">> & {
-  className?: string;
-  alt?: string;
-};
+    className?: string
+    alt?: string
+  }
 
 export const Image = ({
   base64,
@@ -26,4 +26,4 @@ export const Image = ({
     )}
     src={`data:${mediaType};base64,${base64}`}
   />
-);
+)

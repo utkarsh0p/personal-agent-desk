@@ -1,26 +1,26 @@
-"use client";
+"use client"
 
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
-import { BookIcon, ChevronDownIcon } from "lucide-react";
-import type { ComponentProps } from "react";
+} from "@/components/ui/collapsible"
+import { cn } from "@/lib/utils"
+import { BookIcon, ChevronDownIcon } from "lucide-react"
+import type { ComponentProps } from "react"
 
-export type SourcesProps = ComponentProps<"div">;
+export type SourcesProps = ComponentProps<"div">
 
 export const Sources = ({ className, ...props }: SourcesProps) => (
   <Collapsible
-    className={cn("not-prose mb-4 text-primary text-xs", className)}
+    className={cn("not-prose mb-4 text-xs text-primary", className)}
     {...props}
   />
-);
+)
 
 export type SourcesTriggerProps = ComponentProps<typeof CollapsibleTrigger> & {
-  count: number;
-};
+  count: number
+}
 
 export const SourcesTrigger = ({
   className,
@@ -39,9 +39,9 @@ export const SourcesTrigger = ({
       </>
     )}
   </CollapsibleTrigger>
-);
+)
 
-export type SourcesContentProps = ComponentProps<typeof CollapsibleContent>;
+export type SourcesContentProps = ComponentProps<typeof CollapsibleContent>
 
 export const SourcesContent = ({
   className,
@@ -50,14 +50,14 @@ export const SourcesContent = ({
   <CollapsibleContent
     className={cn(
       "mt-3 flex w-fit flex-col gap-2",
-      "data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-top-2 data-[state=open]:slide-in-from-top-2 outline-none data-[state=closed]:animate-out data-[state=open]:animate-in",
+      "outline-none data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-top-2 data-[state=open]:animate-in data-[state=open]:slide-in-from-top-2",
       className
     )}
     {...props}
   />
-);
+)
 
-export type SourceProps = ComponentProps<"a">;
+export type SourceProps = ComponentProps<"a">
 
 export const Source = ({ href, title, children, ...props }: SourceProps) => (
   <a
@@ -74,4 +74,4 @@ export const Source = ({ href, title, children, ...props }: SourceProps) => (
       </>
     )}
   </a>
-);
+)
