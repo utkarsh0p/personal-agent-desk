@@ -7,6 +7,7 @@ import { ChatAvatar } from "@/components/chat-avatar"
 import { useDesktopPanel } from "@/components/desktop-panel"
 import { GroupChatAvatar } from "@/components/group-chat-avatar"
 import { GroupChatDialog } from "@/components/group-chat-dialog"
+import { MobileNavActions, MobileSidebarButton } from "@/components/mobile-nav"
 import { Button } from "@/components/ui/button"
 import type { Bot } from "@/db/schema"
 import type { ChatWithBots } from "@/queries/bots"
@@ -19,7 +20,6 @@ function DesktopButton() {
     <Button
       variant="ghost"
       size="icon-sm"
-      className="ml-auto"
       aria-label="Desktop"
       aria-pressed={desktopPanel.open}
       onClick={desktopPanel.toggle}
@@ -37,12 +37,14 @@ function ChatHeader({
   chat: ChatWithBots
   bots?: Pick<Bot, "id" | "name" | "avatar">[]
 }) {
+  const isGroup = chat.kind === "group"
+
   return (
     <header
       data-slot="chat-header"
       className="flex h-12 shrink-0 items-center gap-2 border-b px-4"
     >
-      {chat.kind === "group" ? (
+      {isGroup ? (
         <h1 className="-ml-2 flex min-w-0">
           <GroupChatDialog
             chat={chat}
@@ -59,21 +61,24 @@ function ChatHeader({
           </GroupChatDialog>
         </h1>
       ) : (
-        <>
-          <h1 className="-ml-2 flex min-w-0">
-            <BotDialog
-              bot={chat.bots[0]}
-              trigger={
-                <Button variant="ghost" className="min-w-0 shrink gap-2 px-2" />
-              }
-            >
-              <ChatAvatar seed={chat.bots[0].avatar} className="size-6" />
-              <span className="truncate">{chat.name ?? chat.bots[0].name}</span>
-            </BotDialog>
-          </h1>
-          <DesktopButton />
-        </>
+        <h1 className="-ml-2 flex min-w-0">
+          <BotDialog
+            bot={chat.bots[0]}
+            trigger={
+              <Button variant="ghost" className="min-w-0 shrink gap-2 px-2" />
+            }
+          >
+            <ChatAvatar seed={chat.bots[0].avatar} className="size-6" />
+            <span className="truncate">{chat.name ?? chat.bots[0].name}</span>
+          </BotDialog>
+        </h1>
       )}
+      {/* The title itself edits the bot, so switching chats gets its own control */}
+      <MobileSidebarButton className="md:hidden" />
+      <div className="ml-auto flex items-center gap-1">
+        {!isGroup && <DesktopButton />}
+        <MobileNavActions bots={bots} className="md:hidden" />
+      </div>
     </header>
   )
 }

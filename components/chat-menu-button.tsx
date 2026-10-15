@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useParams } from "next/navigation"
 
-import { SidebarMenuButton } from "@/components/ui/sidebar"
+import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar"
 
 // Children are rendered by the server so the avatars stay out of the client bundle
 function ChatMenuButton({
@@ -16,6 +16,7 @@ function ChatMenuButton({
   children: React.ReactNode
 }) {
   const params = useParams<{ chatId?: string }>()
+  const { setOpenMobile } = useSidebar()
   const isActive = params.chatId === chatId
 
   return (
@@ -23,6 +24,9 @@ function ChatMenuButton({
       size="lg"
       tooltip={tooltip}
       isActive={isActive}
+      // On small screens the sidebar is a sheet over the chat, so it has to
+      // close itself once it has taken you somewhere
+      onClick={() => setOpenMobile(false)}
       render={
         <Link
           href={`/chats/${chatId}`}

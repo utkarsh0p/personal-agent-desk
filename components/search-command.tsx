@@ -18,6 +18,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 
 // Lets an item close the dialog it is rendered in
@@ -26,6 +27,7 @@ const SearchCommandContext = createContext<() => void>(() => {})
 // Children are the SearchCommandItems, rendered by the server so the avatars stay out of the client bundle
 function SearchCommand({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
+  const { setOpenMobile } = useSidebar()
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -43,7 +45,14 @@ function SearchCommand({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <SearchCommandContext.Provider value={() => setOpen(false)}>
+    <SearchCommandContext.Provider
+      value={() => {
+        setOpen(false)
+        // On small screens this dialog sits over the sidebar sheet, which has
+        // to close too or it covers the chat it just navigated to
+        setOpenMobile(false)
+      }}
+    >
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton

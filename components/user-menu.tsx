@@ -3,9 +3,39 @@
 import { UserButton } from "@clerk/nextjs"
 import { CreditCardIcon, FileTextIcon, ShieldIcon } from "lucide-react"
 
-// The account button in the sidebar footer, with the pricing page in its menu.
-// A client component, as the menu's parts only exist on the client.
-function UserMenu() {
+// Clerk matches its children by component type, so the menu has to stay a
+// `UserButton.MenuItems` element itself. Sharing the element — rather than
+// wrapping it in a component — keeps both variants on one menu.
+const menuItems = (
+  <UserButton.MenuItems>
+    <UserButton.Action label="manageAccount" />
+    <UserButton.Link
+      label="Pricing"
+      labelIcon={<CreditCardIcon className="size-4" />}
+      href="/pricing"
+    />
+    <UserButton.Link
+      label="Privacy"
+      labelIcon={<ShieldIcon className="size-4" />}
+      href="/privacy"
+    />
+    <UserButton.Link
+      label="Terms"
+      labelIcon={<FileTextIcon className="size-4" />}
+      href="/terms"
+    />
+    <UserButton.Action label="signOut" />
+  </UserButton.MenuItems>
+)
+
+// The account button, with the pricing page in its menu. A client component, as
+// the menu's parts only exist on the client. `sidebar` is the full-width row in
+// the sidebar footer, `icon` the bare avatar the mobile top bar has room for.
+function UserMenu({ variant = "sidebar" }: { variant?: "sidebar" | "icon" }) {
+  if (variant === "icon") {
+    return <UserButton>{menuItems}</UserButton>
+  }
+
   return (
     // Clerk's own styles beat plain utilities, so the SidebarMenuButton classes are mirrored here as important.
     <UserButton
@@ -22,25 +52,7 @@ function UserMenu() {
         },
       }}
     >
-      <UserButton.MenuItems>
-        <UserButton.Action label="manageAccount" />
-        <UserButton.Link
-          label="Pricing"
-          labelIcon={<CreditCardIcon className="size-4" />}
-          href="/pricing"
-        />
-        <UserButton.Link
-          label="Privacy"
-          labelIcon={<ShieldIcon className="size-4" />}
-          href="/privacy"
-        />
-        <UserButton.Link
-          label="Terms"
-          labelIcon={<FileTextIcon className="size-4" />}
-          href="/terms"
-        />
-        <UserButton.Action label="signOut" />
-      </UserButton.MenuItems>
+      {menuItems}
     </UserButton>
   )
 }

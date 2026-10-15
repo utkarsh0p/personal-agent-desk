@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog"
 import { ResizableHandle, ResizablePanel } from "@/components/ui/resizable"
 import { Spinner } from "@/components/ui/spinner"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 type DesktopStatus = "idle" | "connecting" | "connected" | "disconnected"
 
@@ -154,8 +155,9 @@ function DesktopPanelProvider({
 }
 
 function DesktopPanel({ name }: { name: string }) {
-  const { open, status, connect, attachScreen, setInteractive } =
+  const { open, toggle, status, connect, attachScreen, setInteractive } =
     useDesktopPanel()
+  const isMobile = useIsMobile()
   const [fullscreen, setFullscreen] = React.useState(false)
   const [panelSlot, setPanelSlot] = React.useState<HTMLDivElement | null>(null)
   const [dialogSlot, setDialogSlot] = React.useState<HTMLDivElement | null>(
@@ -174,6 +176,63 @@ function DesktopPanel({ name }: { name: string }) {
 
   const title = `${name}'s screen`
 
+  // Escape belongs to the desktop; only the close button closes
+  const onlyCloseDismisses = (
+    open: boolean,
+    eventDetails: { reason?: string }
+  ) => eventDetails.reason === "close-press" || open
+
+  // There is no room beside the chat on a phone, so the screen takes the whole
+  // view. It is the same screen element either way, moved by attachScreen.
+  if (isMobile) {
+    return (
+      <Dialog
+        open
+        onOpenChange={(open, eventDetails) => {
+          if (!onlyCloseDismisses(open, eventDetails)) return
+          // Closing the only view of the screen closes the panel itself, so the
+          // header button stops reading as pressed
+          if (!open) toggle()
+        }}
+        disablePointerDismissal
+      >
+        <DialogContent
+          initialFocus={false}
+          className="flex h-svh max-w-none flex-col gap-0 rounded-none p-0 ring-0 sm:max-w-none"
+        >
+          {/* Right padding keeps the title and reconnect clear of the close button */}
+          <DialogHeader className="h-12 shrink-0 flex-row items-center gap-2 border-b px-4 pr-12">
+            <DialogTitle className="truncate">{title}</DialogTitle>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              className="ml-auto"
+              aria-label="Reconnect"
+              disabled={status === "connecting"}
+              onClick={connect}
+            >
+              <RefreshCwIcon />
+            </Button>
+          </DialogHeader>
+          {/* The slot stays empty: React must not manage children beside the
+              screen element that attachScreen appends into it */}
+          <div className="relative min-h-0 flex-1 bg-muted">
+            <div ref={setDialogSlot} className="absolute inset-0" />
+            {status !== "connected" && (
+              <div className="absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
+                {status === "disconnected" ? (
+                  "Screen disconnected"
+                ) : (
+                  <Spinner />
+                )}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
   return (
     <>
       <ResizableHandle withHandle />
@@ -181,8 +240,7 @@ function DesktopPanel({ name }: { name: string }) {
         <Dialog
           open={fullscreen}
           onOpenChange={(open, eventDetails) => {
-            // Escape belongs to the desktop; only the close button closes
-            if (!open && eventDetails.reason !== "close-press") return
+            if (!onlyCloseDismisses(open, eventDetails)) return
             setFullscreen(open)
           }}
           disablePointerDismissal

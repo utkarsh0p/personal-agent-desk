@@ -16,19 +16,17 @@ export default async function Page({
   await auth.protect()
 
   const { chatId } = await params
-  const chat = await getChat(chatId)
+  const [chat, bots] = await Promise.all([getChat(chatId), getBots()])
   if (!chat) notFound()
+
+  // Members for a group chat to edit, and the create menu the mobile header carries
+  const chatBots = bots.map(({ id, name, avatar }) => ({ id, name, avatar }))
 
   // A group has several bots and so no single desktop to show
   if (chat.kind === "group") {
-    const bots = await getBots()
-
     return (
       <div className="flex h-svh flex-col">
-        <ChatHeader
-          chat={chat}
-          bots={bots.map(({ id, name, avatar }) => ({ id, name, avatar }))}
-        />
+        <ChatHeader chat={chat} bots={chatBots} />
         <Chat
           chatId={chat.id}
           bots={chat.bots.map(({ id, name, avatar }) => ({ id, name, avatar }))}
@@ -44,7 +42,7 @@ export default async function Page({
         <ResizablePanelGroup orientation="horizontal">
           <ResizablePanel id="chat" minSize="30%">
             <div className="flex h-full flex-col">
-              <ChatHeader chat={chat} />
+              <ChatHeader chat={chat} bots={chatBots} />
               <Chat chatId={chat.id} />
             </div>
           </ResizablePanel>
